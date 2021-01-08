@@ -5,17 +5,29 @@ import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExpertInspectionTask extends AbstractInspectionTask {
-    private final Expert expert;
+    private final List<Expert> experts;
+    private final Map<Expert, CheckTask> expertCheckTaskMap;
 
-    public ExpertInspectionTask(String name, List<Market> interestedMarkets, List<Product> interestedProducts, Date deadLine, Expert expert) {
+    public ExpertInspectionTask(String name, List<Market> interestedMarkets, List<Product> interestedProducts, Date deadLine, List<Expert> experts) {
         super(name, interestedMarkets, interestedProducts, deadLine);
-        this.expert = expert;
+        this.experts = experts;
+        // initialize expert * check task map
+        this.expertCheckTaskMap = new HashMap<>();
+        for (Market market: interestedMarkets) {
+            this.expertCheckTaskMap.put(experts.get(interestedMarkets.indexOf(market)), new CheckTask(market, interestedProducts));
+        }
     }
 
-    public Expert getExpert() {
-        return expert;
+    public List<Expert> getExperts() {
+        return experts;
+    }
+
+    public Map<Expert, CheckTask> getExpertCheckTaskMap() {
+        return expertCheckTaskMap;
     }
 }
