@@ -1,6 +1,6 @@
-package com.fudan.market_inspection.entity;
+package com.fudan.market_inspection.dao;
 
-import com.fudan.market_inspection.dao.Product;
+import com.fudan.market_inspection.entity.Product;
 
 import java.util.Date;
 

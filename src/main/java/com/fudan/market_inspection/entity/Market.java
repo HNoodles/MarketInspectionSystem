@@ -1,12 +1,13 @@
-package com.fudan.market_inspection.dao;
+package com.fudan.market_inspection.entity;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
-public class Product {
+public class Market {
     private Integer id;
     private String name;
 
@@ -35,12 +36,10 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Product product = (Product) o;
+        Market market = (Market) o;
 
-        if (id != null ? !id.equals(product.id) : product.id != null) return false;
-        if (name != null ? !name.equals(product.name) : product.name != null) return false;
-
-        return true;
+        if (!Objects.equals(id, market.id)) return false;
+        return Objects.equals(name, market.name);
     }
 
     @Override

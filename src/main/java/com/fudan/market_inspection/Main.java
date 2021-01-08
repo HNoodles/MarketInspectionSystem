@@ -1,6 +1,6 @@
 package com.fudan.market_inspection;
 
-import com.fudan.market_inspection.dao.Expert;
+import com.fudan.market_inspection.entity.Expert;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

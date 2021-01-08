@@ -1,17 +1,24 @@
-package com.fudan.market_inspection.dao;
+package com.fudan.market_inspection.entity;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
-public class Market {
+public class Expert {
     private Integer id;
     private String name;
 
+    public Expert() {}
+
+    public Expert(String name) {
+        this.name = name;
+    }
+
     @Id
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID")
     public Integer getId() {
         return id;
     }
@@ -21,7 +28,7 @@ public class Market {
     }
 
     @Basic
-    @Column(name = "NAME", nullable = false, length = -1)
+    @Column(name = "NAME")
     public String getName() {
         return name;
     }
@@ -35,12 +42,10 @@ public class Market {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Market market = (Market) o;
+        Expert expert = (Expert) o;
 
-        if (id != null ? !id.equals(market.id) : market.id != null) return false;
-        if (name != null ? !name.equals(market.name) : market.name != null) return false;
-
-        return true;
+        if (!Objects.equals(id, expert.id)) return false;
+        return Objects.equals(name, expert.name);
     }
 
     @Override

@@ -1,8 +1,8 @@
-package com.fudan.market_inspection.entity;
+package com.fudan.market_inspection.dao;
 
 public class TimeGrade {
-    final private int grade;
-    final private String reason;
+    private final int grade;
+    private final String reason;
 
     public TimeGrade(int grade, String reason) {
         this.grade = grade;

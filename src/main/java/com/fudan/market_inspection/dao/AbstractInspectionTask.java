@@ -1,7 +1,7 @@
-package com.fudan.market_inspection.entity;
+package com.fudan.market_inspection.dao;
 
-import com.fudan.market_inspection.dao.Market;
-import com.fudan.market_inspection.dao.Product;
+import com.fudan.market_inspection.entity.Market;
+import com.fudan.market_inspection.entity.Product;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -9,20 +9,26 @@ import java.util.List;
 import java.util.Map;
 
 public class AbstractInspectionTask {
+    private final String name;
     private final List<Market> interestedMarkets;
     private final List<Product> interestedProducts;
     private final Date deadLine;
     private final Map<Market, CheckTask> marketCheckTaskMap;
 
-    protected AbstractInspectionTask(List<Market> interestedMarkets, List<Product> interestedProducts, Date deadLine) {
+    protected AbstractInspectionTask(String name, List<Market> interestedMarkets, List<Product> interestedProducts, Date deadLine) {
+        this.name = name;
         this.interestedMarkets = interestedMarkets;
         this.interestedProducts = interestedProducts;
         this.deadLine = deadLine;
-        // initialize market - check task map
+        // initialize market * check task map
         this.marketCheckTaskMap = new HashMap<>();
         for (Market market: this.interestedMarkets) {
             this.marketCheckTaskMap.put(market, new CheckTask(market, this.interestedProducts));
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<Market> getInterestedMarkets() {
