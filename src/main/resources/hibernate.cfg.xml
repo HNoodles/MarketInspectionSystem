@@ -13,10 +13,10 @@
     <property name="hibernate.hbm2ddl.auto">update</property>
 
     <mapping resource="Expert.hbm.xml"/>
-    <mapping class="com.fudan.market_inspection.entity.Expert"/>
+    <mapping class="com.fudan.market_inspection.dao.Expert"/>
     <mapping resource="Market.hbm.xml"/>
-    <mapping class="com.fudan.market_inspection.entity.Market"/>
+    <mapping class="com.fudan.market_inspection.dao.Market"/>
     <mapping resource="Product.hbm.xml"/>
-    <mapping class="com.fudan.market_inspection.entity.Product"/>
+    <mapping class="com.fudan.market_inspection.dao.Product"/>
   </session-factory>
 </hibernate-configuration>

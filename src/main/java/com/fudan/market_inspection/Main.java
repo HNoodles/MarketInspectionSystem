@@ -1,9 +1,8 @@
 package com.fudan.market_inspection;
 
-import com.fudan.market_inspection.entity.Expert;
+import com.fudan.market_inspection.dao.Expert;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 public class Main {

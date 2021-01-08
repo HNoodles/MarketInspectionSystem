@@ -4,7 +4,7 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-    <class name="com.fudan.market_inspection.entity.Market" table="MARKET" schema="PUBLIC" catalog="MARKET_INSPECTION">
+    <class name="com.fudan.market_inspection.dao.Market" table="MARKET" schema="PUBLIC" catalog="MARKET_INSPECTION">
         <id name="id">
             <column name="ID" sql-type="int"/>
         </id>
