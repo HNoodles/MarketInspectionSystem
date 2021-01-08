@@ -4,10 +4,10 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-    <class name="com.fudan.market_inspection.entity.Expert" table="EXPERT" schema="PUBLIC" catalog="MARKET_INSPECTION">
+    <class name="com.fudan.market_inspection.entity.Product" table="PRODUCT" schema="PUBLIC"
+           catalog="MARKET_INSPECTION">
         <id name="id">
             <column name="ID" sql-type="int"/>
-            <generator class="identity"/>
         </id>
         <property name="name">
             <column name="NAME" sql-type="varchar"/>

@@ -6,8 +6,6 @@
   <session-factory>
     <property name="connection.url">jdbc:h2:./data/market_inspection</property>
     <property name="connection.driver_class">org.h2.Driver</property>
-    <property name="connection.username">sa</property>
-    <property name="connection.password"/>
 
     <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
 
@@ -16,5 +14,9 @@
 
     <mapping resource="Expert.hbm.xml"/>
     <mapping class="com.fudan.market_inspection.entity.Expert"/>
+    <mapping resource="Market.hbm.xml"/>
+    <mapping class="com.fudan.market_inspection.entity.Market"/>
+    <mapping resource="Product.hbm.xml"/>
+    <mapping class="com.fudan.market_inspection.entity.Product"/>
   </session-factory>
 </hibernate-configuration>
