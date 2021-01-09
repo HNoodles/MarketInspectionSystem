@@ -9,6 +9,12 @@ import java.util.Map;
 
 public interface ProductService {
     /**
+     * This method should return all products in the system.
+     * @return a list of products in the system.
+     */
+    List<Product> getAllProducts();
+
+    /**
      * This method should summarize the total invalid product counts for each product checked in system tasks
      * among a period of time.
      * @param tasks inspection tasks in the system

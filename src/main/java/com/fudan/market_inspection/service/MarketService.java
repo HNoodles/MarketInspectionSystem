@@ -10,6 +10,12 @@ import java.util.Map;
 
 public interface MarketService {
     /**
+     * This method should return all markets in the system.
+     * @return a list of markets in the system.
+     */
+    List<Market> getMarkets();
+
+    /**
      * This method should summarize all unfinished SelfInspectionTasks for each market. In each task, all
      * unfinished product test should be included.
      * @param tasks existing SelfInspectionTasks in the system
