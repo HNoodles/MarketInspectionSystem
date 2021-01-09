@@ -1,10 +1,10 @@
 package com.fudan.market_inspection.dao;
 
-public class GradeHistory {
+public class GradeTerm {
     private final int grade;
     private final String reason;
 
-    public GradeHistory(int grade, String reason) {
+    public GradeTerm(int grade, String reason) {
         this.grade = grade;
         this.reason = reason;
     }

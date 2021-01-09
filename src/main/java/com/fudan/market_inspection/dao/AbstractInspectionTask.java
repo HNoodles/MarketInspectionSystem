@@ -2,6 +2,7 @@ package com.fudan.market_inspection.dao;
 
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
+import com.fudan.market_inspection.service.visitor.AbstractVisitor;
 
 import java.util.*;
 
@@ -55,5 +56,11 @@ public abstract class AbstractInspectionTask {
         }
         this.finishDate = finishDate;
         return true;
+    }
+
+    public void accept(AbstractVisitor visitor) {
+        for (CheckTask checkTask: marketCheckTaskMap.values()) {
+            visitor.visit(checkTask);
+        }
     }
 }

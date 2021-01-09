@@ -5,23 +5,23 @@ import java.util.List;
 
 public class GradeInfo {
     private int totalGrade;
-    private final List<GradeHistory> gradeHistoryList;
+    private final List<GradeTerm> gradeTermList;
 
     public GradeInfo() {
         this.totalGrade = 0;
-        this.gradeHistoryList = new ArrayList<>();
+        this.gradeTermList = new ArrayList<>();
     }
 
     public int getTotalGrade() {
         return totalGrade;
     }
 
-    public List<GradeHistory> getGradeHistoryList() {
-        return gradeHistoryList;
+    public List<GradeTerm> getGradeTermList() {
+        return gradeTermList;
     }
 
-    public void addGradeHistory(GradeHistory gradeHistory) {
-        this.gradeHistoryList.add(gradeHistory);
+    public void addGradeTerm(GradeTerm gradeHistory) {
+        this.gradeTermList.add(gradeHistory);
         this.totalGrade += gradeHistory.getGrade();
     }
 }
