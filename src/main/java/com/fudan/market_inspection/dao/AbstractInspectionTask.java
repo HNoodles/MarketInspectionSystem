@@ -3,17 +3,15 @@ package com.fudan.market_inspection.dao;
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class AbstractInspectionTask {
+public abstract class AbstractInspectionTask {
     private final String name;
     private final List<Market> interestedMarkets;
     private final List<Product> interestedProducts;
     private final Date deadLine;
     private final Map<Market, CheckTask> marketCheckTaskMap;
+    private Date finishDate;
 
     protected AbstractInspectionTask(String name, List<Market> interestedMarkets, List<Product> interestedProducts, Date deadLine) {
         this.name = name;
@@ -45,5 +43,17 @@ public class AbstractInspectionTask {
 
     public Map<Market, CheckTask> getMarketCheckTaskMap() {
         return marketCheckTaskMap;
+    }
+
+    public Date getFinishDate() {
+        return finishDate;
+    }
+
+    public boolean markFinish(Date finishDate) {
+        if (marketCheckTaskMap.size() < interestedMarkets.size()) {
+            return false;
+        }
+        this.finishDate = finishDate;
+        return true;
     }
 }

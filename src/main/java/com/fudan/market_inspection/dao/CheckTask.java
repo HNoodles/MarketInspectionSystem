@@ -43,8 +43,12 @@ public class CheckTask {
         return finishDate;
     }
 
-    public void setFinished(boolean finished, Date finishDate) {
+    public boolean setFinished(boolean finished, Date finishDate) {
+        if (checkResults.size() < interestedProducts.size()) {
+            return false;
+        }
         this.finished = finished;
         this.finishDate = finishDate;
+        return true;
     }
 }
