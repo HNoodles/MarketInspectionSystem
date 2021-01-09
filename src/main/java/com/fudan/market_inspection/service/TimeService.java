@@ -9,6 +9,15 @@ public interface TimeService {
      */
     Date getCurrentDate();
 
+    /**
+     * This method should return a Date object representing the indicated date.
+     * @param year indicated year
+     * @param month indicated month
+     * @param day indicated day
+     * @return the indicated date
+     */
+    Date getDate(int year, int month, int day);
+
 //    /**
 //     * This method should return a date which is "days" after today.
 //     * @param days the time period between the result date and current date of the system
