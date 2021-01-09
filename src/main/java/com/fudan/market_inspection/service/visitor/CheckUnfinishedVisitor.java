@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CheckFinishedVisitor extends AbstractVisitor {
+public class CheckUnfinishedVisitor extends AbstractVisitor {
     private final Map<Market, List<Product>> result;
 
-    public CheckFinishedVisitor() {
+    public CheckUnfinishedVisitor() {
         result = new HashMap<>();
     }
 
