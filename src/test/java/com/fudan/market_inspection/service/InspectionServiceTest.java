@@ -106,12 +106,12 @@ class InspectionServiceTest {
      */
     @Test
     void testGetProductTotalInvalidCountInRange() {
-        Map<Product, Integer> counts = inspectionService.getProductTotalInvalidCountInRange(Arrays.asList(marketTask1),
+        Map<Product, Integer> counts = inspectionService.getProductTotalInvalidCountInRange(Collections.singletonList(marketTask1),
                 timeService.getDateOfNDaysLater(3), timeService.getDateOfNDaysLater(14));
         assertEquals(1, counts.size());
         assertEquals(4, counts.get(marketTask1.getInterestedProducts().get(0)));
 
-        counts = inspectionService.getProductTotalInvalidCountInRange(Arrays.asList(marketTask2),
+        counts = inspectionService.getProductTotalInvalidCountInRange(Collections.singletonList(marketTask2),
                 timeService.getDateOfNDaysLater(-1), timeService.getDateOfNDaysLater(9));
         assertEquals(3, counts.size());
         assertEquals(1, counts.get(marketTask2.getInterestedProducts().get(0)));
