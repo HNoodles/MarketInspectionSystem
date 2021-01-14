@@ -1,23 +1,23 @@
 package com.fudan.market_inspection.dao;
 
+import com.fudan.market_inspection.dao.decorator.Component;
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class CheckTask implements ITask {
+public class CheckTask implements ITask, Component {
     private final Market interestedMarket;
     private final List<Product> interestedProducts;
     private final Map<Product, CheckResult> checkResults;
+    private final Date deadLine;
     private Date finishDate;
 
-    public CheckTask(Market interestedMarket, List<Product> interestedProducts) {
+    public CheckTask(Market interestedMarket, List<Product> interestedProducts, Date deadLine) {
         this.interestedMarket = interestedMarket;
         this.interestedProducts = interestedProducts;
         this.checkResults = new HashMap<>();
+        this.deadLine = deadLine;
         this.finishDate = null;
     }
 
@@ -58,5 +58,14 @@ public class CheckTask implements ITask {
     @Override
     public Date getFinishDate() {
         return finishDate;
+    }
+
+    @Override
+    public List<GradeTerm> getGrade() {
+        return new ArrayList<>();
+    }
+
+    public Date getDeadLine() {
+        return deadLine;
     }
 }

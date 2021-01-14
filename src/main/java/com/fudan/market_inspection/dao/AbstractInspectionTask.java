@@ -1,12 +1,13 @@
 package com.fudan.market_inspection.dao;
 
+import com.fudan.market_inspection.dao.decorator.Component;
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 import com.fudan.market_inspection.service.visitor.AbstractVisitor;
 
 import java.util.*;
 
-public abstract class AbstractInspectionTask implements ITask {
+public abstract class AbstractInspectionTask implements ITask, Component {
     private final String name;
     private final List<Market> interestedMarkets;
     private final List<Product> interestedProducts;
@@ -22,7 +23,7 @@ public abstract class AbstractInspectionTask implements ITask {
         // initialize market * check task map
         this.marketCheckTaskMap = new HashMap<>();
         for (Market market: interestedMarkets) {
-            this.marketCheckTaskMap.put(market, new CheckTask(market, interestedProducts));
+            this.marketCheckTaskMap.put(market, new CheckTask(market, interestedProducts, deadLine));
         }
         finishDate = null;
     }
@@ -71,5 +72,10 @@ public abstract class AbstractInspectionTask implements ITask {
         for (CheckTask checkTask: marketCheckTaskMap.values()) {
             visitor.visit(checkTask);
         }
+    }
+
+    @Override
+    public List<GradeTerm> getGrade() {
+        return new ArrayList<>();
     }
 }

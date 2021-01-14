@@ -1,9 +1,10 @@
 package com.fudan.market_inspection.dao;
 
 public enum GradeTerm {
-    INTIME(10, "按时完成"),
+    NOT_YET(0, "尚未完成"),
+    IN_TIME(10, "按时完成"),
     OVERTIME(-10, "超时完成"),
-    LONGOVERTIME(-20, "超过20天未完成");
+    LONG_OVERTIME(-20, "超过20天未完成");
 
     private final int grade;
     private final String reason;
