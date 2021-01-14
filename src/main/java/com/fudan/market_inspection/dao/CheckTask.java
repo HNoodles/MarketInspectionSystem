@@ -8,18 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CheckTask {
+public class CheckTask implements ITask {
     private final Market interestedMarket;
     private final List<Product> interestedProducts;
     private final Map<Product, CheckResult> checkResults;
-    private boolean finished;
     private Date finishDate;
 
     public CheckTask(Market interestedMarket, List<Product> interestedProducts) {
         this.interestedMarket = interestedMarket;
         this.interestedProducts = interestedProducts;
         this.checkResults = new HashMap<>();
-        this.finished = false;
         this.finishDate = null;
     }
 
@@ -31,24 +29,30 @@ public class CheckTask {
         return interestedProducts;
     }
 
+    public void addCheckResult(Product product, CheckResult checkResult) {
+        checkResults.put(product, checkResult); // if using the same key, update automatically
+    }
+
     public Map<Product, CheckResult> getCheckResults() {
         return checkResults;
     }
 
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public Date getFinishDate() {
-        return finishDate;
-    }
-
-    public boolean setFinished(boolean finished, Date finishDate) {
+    @Override
+    public boolean markFinish(Date finishDate) {
         if (checkResults.size() < interestedProducts.size()) {
             return false;
         }
-        this.finished = finished;
         this.finishDate = finishDate;
         return true;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return finishDate != null;
+    }
+
+    @Override
+    public Date getFinishDate() {
+        return finishDate;
     }
 }

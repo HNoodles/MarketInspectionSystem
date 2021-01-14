@@ -8,7 +8,6 @@ import org.hibernate.cfg.Configuration;
 import java.util.List;
 
 public class DataUtils {
-    // 获取加载配置管理类
     private static Configuration configuration;
     private static SessionFactory factory;
 
@@ -16,7 +15,7 @@ public class DataUtils {
         // lazy load configuration, session factory
         if (configuration == null) {
             configuration = new Configuration();
-            configuration.configure();
+            configuration.configure(); // load file hibernate.cfg.xml for default
             factory = configuration.buildSessionFactory();
         }
         return factory.openSession();

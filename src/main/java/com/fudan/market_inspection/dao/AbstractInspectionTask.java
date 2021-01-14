@@ -6,7 +6,7 @@ import com.fudan.market_inspection.service.visitor.AbstractVisitor;
 
 import java.util.*;
 
-public abstract class AbstractInspectionTask {
+public abstract class AbstractInspectionTask implements ITask {
     private final String name;
     private final List<Market> interestedMarkets;
     private final List<Product> interestedProducts;
@@ -24,6 +24,7 @@ public abstract class AbstractInspectionTask {
         for (Market market: interestedMarkets) {
             this.marketCheckTaskMap.put(market, new CheckTask(market, interestedProducts));
         }
+        finishDate = null;
     }
 
     public String getName() {
@@ -46,16 +47,24 @@ public abstract class AbstractInspectionTask {
         return marketCheckTaskMap;
     }
 
-    public Date getFinishDate() {
-        return finishDate;
-    }
-
+    @Override
     public boolean markFinish(Date finishDate) {
-        if (marketCheckTaskMap.size() < interestedMarkets.size()) {
-            return false;
+        for (CheckTask task : marketCheckTaskMap.values()) {
+            if (!task.isFinished())
+                return false;
         }
         this.finishDate = finishDate;
         return true;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return finishDate != null;
+    }
+
+    @Override
+    public Date getFinishDate() {
+        return finishDate;
     }
 
     public void accept(AbstractVisitor visitor) {

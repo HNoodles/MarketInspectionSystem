@@ -3,6 +3,7 @@ package com.fudan.market_inspection.service;
 import com.fudan.market_inspection.dao.AbstractInspectionTask;
 import com.fudan.market_inspection.dao.CheckResult;
 import com.fudan.market_inspection.dao.CheckTask;
+import com.fudan.market_inspection.dao.ITask;
 import com.fudan.market_inspection.entity.Expert;
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
@@ -29,7 +30,5 @@ public interface TaskService {
      */
     void addCheckResult(AbstractInspectionTask task, Market market, CheckResult checkResult);
 
-    void markCheckTaskFinished(CheckTask checkTask, Date finishDate);
-
-    void markInspectionTaskFinished(AbstractInspectionTask task, Date finishDate);
+    void markTaskFinished(ITask task, Date finishDate);
 }
