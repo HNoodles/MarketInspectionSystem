@@ -8,6 +8,7 @@ import com.fudan.market_inspection.entity.Expert;
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 import com.fudan.market_inspection.service.InspectionService;
+import com.fudan.market_inspection.service.visitor.CheckInvalidVisitor;
 
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,18 @@ public class InspectionServiceImpl implements InspectionService {
     }
 
     @Override
-    public Map<Product, Integer> getProductTotalInvalidCount(List<AbstractInspectionTask> tasks, Date startDate, Date endDate) {
-        return null;
+    public Map<Product, Integer> getProductTotalInvalidCountInRange(List<AbstractInspectionTask> tasks, Date startDate, Date endDate) {
+        CheckInvalidVisitor visitor = new CheckInvalidVisitor(startDate, endDate);
+        for (AbstractInspectionTask task : tasks) {
+            task.accept(visitor);
+        }
+        return visitor.getResult();
+    }
+
+    @Override
+    public Map<Product, Integer> getProductInvalidCount(AbstractInspectionTask task) {
+        CheckInvalidVisitor visitor = new CheckInvalidVisitor();
+        task.accept(visitor);
+        return visitor.getResult();
     }
 }

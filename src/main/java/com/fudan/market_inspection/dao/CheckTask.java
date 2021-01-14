@@ -30,6 +30,7 @@ public class CheckTask implements ITask {
     }
 
     public void addCheckResult(Product product, CheckResult checkResult) {
+        // todo what if product is not in interestedProducts?
         checkResults.put(product, checkResult); // if using the same key, update automatically
     }
 

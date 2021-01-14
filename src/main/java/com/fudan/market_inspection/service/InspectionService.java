@@ -41,5 +41,12 @@ public interface InspectionService {
      * @param endDate count end date
      * @return a map of product to total invalid count
      */
-    Map<Product, Integer> getProductTotalInvalidCount(List<AbstractInspectionTask> tasks, Date startDate, Date endDate);
+    Map<Product, Integer> getProductTotalInvalidCountInRange(List<AbstractInspectionTask> tasks, Date startDate, Date endDate);
+
+    /**
+     * This method should summarize the invalid product counts in the given task.
+     * @param task inspection task in the system
+     * @return a map of product to total invalid count
+     */
+    Map<Product, Integer> getProductInvalidCount(AbstractInspectionTask task);
 }

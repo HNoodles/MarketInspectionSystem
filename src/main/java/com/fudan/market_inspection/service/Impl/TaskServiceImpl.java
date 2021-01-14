@@ -7,15 +7,22 @@ import com.fudan.market_inspection.dao.ITask;
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 import com.fudan.market_inspection.service.TaskService;
+import com.fudan.market_inspection.service.visitor.AbstractVisitor;
+import com.fudan.market_inspection.service.visitor.CheckUnfinishedVisitor;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TaskServiceImpl implements TaskService {
     @Override
     public Map<CheckTask, List<Product>> getUnfinishedContents(AbstractInspectionTask task) {
-        return null; // todo
+        if (task.isFinished())
+            return null;
+        CheckUnfinishedVisitor visitor = new CheckUnfinishedVisitor();
+        task.accept(visitor);
+        return visitor.getResult(); // todo: ugly here
     }
 
     @Override
