@@ -8,6 +8,7 @@ import com.fudan.market_inspection.entity.Expert;
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 import com.fudan.market_inspection.service.InspectionService;
+import com.fudan.market_inspection.service.TimeService;
 import com.fudan.market_inspection.service.visitor.CheckInvalidVisitor;
 import com.fudan.market_inspection.service.visitor.MarketGradingVisitor;
 
@@ -17,8 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 public class InspectionServiceImpl implements InspectionService {
+    TimeService timeService;
+    public InspectionServiceImpl(TimeService timeService) {
+        this.timeService = timeService;
+    }
+
     @Override
-    public Map<Expert, GradeInfo> getExpertGradeInfo(List<ExpertInspectionTask> tasks, Date currentDate) {
+    public Map<Expert, GradeInfo> getExpertGradeInfo(List<ExpertInspectionTask> tasks) {
 //        TODO: duplicated code with MarketGradingVisitor
         Map<Expert, GradeInfo> result = new HashMap<>();
         for (ExpertInspectionTask task : tasks) {
@@ -32,7 +38,7 @@ public class InspectionServiceImpl implements InspectionService {
                     continue;
                 }
             } else { // unfinished
-                delayDays = (currentDate.getTime() - deadLine.getTime()) / (24 * 60 * 60 * 1000);
+                delayDays = (timeService.getCurrentDate().getTime() - deadLine.getTime()) / (24 * 60 * 60 * 1000);
             }
             if (delayDays > 0 && delayDays <= 20) {
                 updateResult(result, task.getExpert(), new OvertimeDecorator(task).getGrade());
@@ -57,8 +63,8 @@ public class InspectionServiceImpl implements InspectionService {
     }
 
     @Override
-    public Map<Market, GradeInfo> getMarketGradeInfo(List<SelfInspectionTask> tasks, Date currentDate) {
-        MarketGradingVisitor visitor = new MarketGradingVisitor(currentDate);
+    public Map<Market, GradeInfo> getMarketGradeInfo(List<SelfInspectionTask> tasks) {
+        MarketGradingVisitor visitor = new MarketGradingVisitor(timeService.getCurrentDate());
         for (SelfInspectionTask task : tasks) {
             task.accept(visitor);
         }

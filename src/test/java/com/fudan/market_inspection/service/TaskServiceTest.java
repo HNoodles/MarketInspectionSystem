@@ -33,8 +33,8 @@ class TaskServiceTest {
     @BeforeEach
     void setUp() {
         dataService = new DataServiceImpl();
-        taskService = new TaskServiceImpl();
-        timeService = new TimeServiceImpl();
+        timeService = new TimeServiceMockImpl();
+        taskService = new TaskServiceImpl(timeService);
 
         experts = dataService.getAllExperts();
         markets = dataService.getAllMarkets();
@@ -94,13 +94,13 @@ class TaskServiceTest {
         for (Market market : marketTask.getInterestedMarkets()) {
             for (Product product : marketTask.getInterestedProducts()) {
                 // add check result
-                taskService.addCheckResult(marketTask, market, new CheckResult(product, 1, timeService.getCurrentDate()));
+                taskService.addCheckResult(marketTask, market, product, 1);
             }
             // mark check task finished
-            taskService.markTaskFinished(marketTask.getMarketCheckTaskMap().get(market), timeService.getCurrentDate());
+            taskService.markTaskFinished(marketTask.getMarketCheckTaskMap().get(market));
         }
         // mark inspection task finished
-        taskService.markTaskFinished(marketTask, timeService.getCurrentDate());
+        taskService.markTaskFinished(marketTask);
         // check if all check tasks finished
         assertEquals(0, taskService.getUnfinishedContents(marketTask).size());
     }
@@ -127,13 +127,13 @@ class TaskServiceTest {
         for (Market market : expertTask.getInterestedMarkets()) {
             for (Product product : expertTask.getInterestedProducts()) {
                 // add check result
-                taskService.addCheckResult(expertTask, market, new CheckResult(product, 1, timeService.getCurrentDate()));
+                taskService.addCheckResult(expertTask, market, product, 1);
             }
             // mark check task finished
-            taskService.markTaskFinished(expertTask.getMarketCheckTaskMap().get(market), timeService.getCurrentDate());
+            taskService.markTaskFinished(expertTask.getMarketCheckTaskMap().get(market));
         }
         // mark inspection task finished
-        taskService.markTaskFinished(expertTask, timeService.getCurrentDate());
+        taskService.markTaskFinished(expertTask);
         // check if all check tasks finished
         assertEquals(0, taskService.getUnfinishedContents(expertTask).size());
     }
@@ -144,15 +144,15 @@ class TaskServiceTest {
         Market firstMarket = marketTask.getInterestedMarkets().get(0);
         for (Product product : marketTask.getInterestedProducts()) {
             // add check result
-            taskService.addCheckResult(marketTask, firstMarket, new CheckResult(product, 1, timeService.getCurrentDate()));
+            taskService.addCheckResult(marketTask, firstMarket, product, 1);
         }
         // mark check task finished
-        taskService.markTaskFinished(marketTask.getMarketCheckTaskMap().get(firstMarket), timeService.getCurrentDate());
+        taskService.markTaskFinished(marketTask.getMarketCheckTaskMap().get(firstMarket));
 
         // finish half of second market's tasks
         Market secondMarket = marketTask.getInterestedMarkets().get(1);
         Product firstProduct = marketTask.getInterestedProducts().get(0);
-        taskService.addCheckResult(marketTask, secondMarket, new CheckResult(firstProduct, 1, timeService.getCurrentDate()));
+        taskService.addCheckResult(marketTask, secondMarket, firstProduct, 1);
 
         // leave third market's tasks unfinished
         Market thirdMarket = marketTask.getInterestedMarkets().get(2);
@@ -163,6 +163,15 @@ class TaskServiceTest {
         // assert have equal number of check tasks
         assertEquals(2, unfinishedContents.size());
 
+        // assert can get those markets that have not completed tasks
+        List<Market> expectedMarkets = Arrays.asList(secondMarket, thirdMarket);
+        List<Market> actualMarkets = new ArrayList<>();
+        for (CheckTask checkTask : unfinishedContents.keySet()) {
+            actualMarkets.add(checkTask.getInterestedMarket());
+        }
+        assertTrue(actualMarkets.containsAll(expectedMarkets));
+        assertTrue(expectedMarkets.containsAll(actualMarkets));
+
         // assert second market's task
         CheckTask secondTask = marketTask.getMarketCheckTaskMap().get(secondMarket);
         assertTrue((unfinishedContents.containsKey(secondTask)));
@@ -171,7 +180,7 @@ class TaskServiceTest {
         assertTrue(actualProductsSecond.containsAll(expectedProductsSecond));
         assertTrue(expectedProductsSecond.containsAll(actualProductsSecond));
 
-        // assert second market's task
+        // assert third market's task
         CheckTask thirdTask = marketTask.getMarketCheckTaskMap().get(thirdMarket);
         assertTrue((unfinishedContents.containsKey(thirdTask)));
         List<Product> actualProducts = thirdTask.getInterestedProducts();

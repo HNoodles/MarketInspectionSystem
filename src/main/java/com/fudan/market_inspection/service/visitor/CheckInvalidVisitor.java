@@ -31,12 +31,10 @@ public class CheckInvalidVisitor extends AbstractVisitor {
 
     @Override
     public void visit(CheckTask checkTask) {
-        if (checkTask.isFinished()) {
-            Map<Product, CheckResult> checkResults = checkTask.getCheckResults();
-            for (CheckResult checkResult : checkResults.values()) {
-                if (isDateInRange(checkResult.getUploadDate())) {
-                    updateResult(checkResult.getProduct(), checkResult.getInvalidCount());
-                }
+        Map<Product, CheckResult> checkResults = checkTask.getCheckResults();
+        for (CheckResult checkResult : checkResults.values()) {
+            if (isDateInRange(checkResult.getUploadDate())) {
+                updateResult(checkResult.getProduct(), checkResult.getInvalidCount());
             }
         }
     }

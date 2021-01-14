@@ -1,10 +1,8 @@
 package com.fudan.market_inspection.service;
 
 import com.fudan.market_inspection.dao.AbstractInspectionTask;
-import com.fudan.market_inspection.dao.CheckResult;
 import com.fudan.market_inspection.dao.CheckTask;
 import com.fudan.market_inspection.dao.ITask;
-import com.fudan.market_inspection.entity.Expert;
 import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 
@@ -26,9 +24,10 @@ public interface TaskService {
      * an InspectionTask.
      * @param task InspectionTask to finish
      * @param market market finishing a product test
-     * @param checkResult the information of a product test
+     * @param product the product of a product test
+     * @param invalidNum the number of invalid product above
      */
-    void addCheckResult(AbstractInspectionTask task, Market market, CheckResult checkResult);
+    void addCheckResult(AbstractInspectionTask task, Market market, Product product, int invalidNum);
 
-    void markTaskFinished(ITask task, Date finishDate);
+    void markTaskFinished(ITask task);
 }
