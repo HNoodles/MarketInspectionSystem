@@ -22,7 +22,7 @@ public class TaskServiceImpl implements TaskService {
             return null;
         CheckUnfinishedVisitor visitor = new CheckUnfinishedVisitor();
         task.accept(visitor);
-        return visitor.getResult(); // todo: ugly here
+        return visitor.getResult();
     }
 
     @Override

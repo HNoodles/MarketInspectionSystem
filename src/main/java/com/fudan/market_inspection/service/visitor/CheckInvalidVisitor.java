@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CheckInvalidVisitor extends AbstractVisitor {
-    private final Map<Product, Integer> result; // todo: name is better? or use one product for each kind? singleton?
+    private final Map<Product, Integer> result;
     private final Date startDate;
     private final Date endDate;
 
     public CheckInvalidVisitor() {
         this.startDate = new Date(Long.MIN_VALUE);
-        this.endDate = new Date(Long.MAX_VALUE); // todo: a little ugly?
+        this.endDate = new Date(Long.MAX_VALUE);
         result = new HashMap<>();
     }
 

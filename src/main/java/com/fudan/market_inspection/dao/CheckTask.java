@@ -30,7 +30,10 @@ public class CheckTask implements ITask {
     }
 
     public void addCheckResult(Product product, CheckResult checkResult) {
-        // todo what if product is not in interestedProducts?
+        // if product is not in interestedProducts
+        if (!this.interestedProducts.contains(product)) {
+            throw new RuntimeException("Product not interested! ");
+        }
         checkResults.put(product, checkResult); // if using the same key, update automatically
     }
 
