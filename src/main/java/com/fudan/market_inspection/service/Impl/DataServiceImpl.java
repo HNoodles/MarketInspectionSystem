@@ -15,7 +15,7 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public List<Market> getMarkets() {
+    public List<Market> getAllMarkets() {
         return DataUtils.getObjects(Market.class);
     }
 

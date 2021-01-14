@@ -19,7 +19,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Map<CheckTask, List<Product>> getUnfinishedContents(AbstractInspectionTask task) {
         if (task.isFinished())
-            return null;
+            return new HashMap<>();
         CheckUnfinishedVisitor visitor = new CheckUnfinishedVisitor();
         task.accept(visitor);
         return visitor.getResult();

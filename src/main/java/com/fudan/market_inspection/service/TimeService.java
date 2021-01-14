@@ -7,12 +7,12 @@ public interface TimeService {
      * This method should return the current date of the system.
      * @return current date of the system
      */
-    public Date getCurrentDate();
+    Date getCurrentDate();
 
     /**
      * This method should return a Date object representing the indicated date.
      * @param n the indicated num of days that is later than the current date
      * @return the indicated date
      */
-    public Date getNDaysLater(int n);
+    Date getNDaysLater(int n);
 }

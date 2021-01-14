@@ -17,7 +17,7 @@ public interface DataService {
      * This method should return all markets in the system.
      * @return a list of markets in the system.
      */
-    List<Market> getMarkets();
+    List<Market> getAllMarkets();
 
     /**
      * This method should return all products in the system.
