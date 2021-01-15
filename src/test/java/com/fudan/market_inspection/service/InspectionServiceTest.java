@@ -50,10 +50,10 @@ class InspectionServiceTest {
                 "Market Task1",
                 Arrays.asList(markets.get(0), markets.get(1), markets.get(2)),
                 Arrays.asList(products.get(0), products.get(1)),
-                timeService.getCurrentDate()
+                timeService.getDateOfNDaysLater(6) // deadLine
         );
         timeService.setCurrentDateLaterByNDays(12);
-        taskService.addCheckResult(marketTask1, marketTask1.getInterestedMarkets().get(1), marketTask1.getInterestedProducts().get(0), 1);
+        taskService.addCheckResult(marketTask1, marketTask1.getInterestedMarkets().get(0), marketTask1.getInterestedProducts().get(0), 1);
         timeService.setCurrentDateLaterByNDays(2);
         taskService.addCheckResult(marketTask1, marketTask1.getInterestedMarkets().get(0), marketTask1.getInterestedProducts().get(1), 2);
         timeService.setCurrentDateLaterByNDays(5);
@@ -65,7 +65,7 @@ class InspectionServiceTest {
                 "Market Task2",
                 Arrays.asList(markets.get(1), markets.get(2)),
                 Arrays.asList(products.get(0), products.get(1), products.get(2)),
-                timeService.getCurrentDate()
+                timeService.getDateOfNDaysLater(10) // deadLine
         );
         timeService.setCurrentDateLaterByNDays(0);
         taskService.addCheckResult(marketTask2, marketTask2.getInterestedMarkets().get(0), marketTask2.getInterestedProducts().get(0), 1);
@@ -97,8 +97,53 @@ class InspectionServiceTest {
     }
 
     @Test
-    void testGetMarketGradeInfo() { // todo
-//        Map<Market, GradeInfo> gradeInfoMap = inspectionService.getMarketGradeInfo()
+    void testGetMarketGradeInfo() {
+        timeService.setCurrentDateLaterByNDays(12);
+        taskService.markTaskFinished(marketTask1.getMarketCheckTaskMap().get(marketTask1.getInterestedMarkets().get(0))); // finished, overtime
+        timeService.setCurrentDateLaterByNDays(4);
+        taskService.addCheckResult(marketTask1, marketTask1.getInterestedMarkets().get(1), marketTask1.getInterestedProducts().get(1), 0);
+        taskService.markTaskFinished(marketTask1.getMarketCheckTaskMap().get(marketTask1.getInterestedMarkets().get(1))); // finished, in time
+        timeService.setCurrentDateLaterByNDays(30);
+        taskService.addCheckResult(marketTask1, marketTask1.getInterestedMarkets().get(2), marketTask1.getInterestedProducts().get(0), 0);
+        // for marketTask1.getInterestedMarkets().get(2), its task is not finished, and long overtime
+        Map<Market, GradeInfo> gradeInfoMap = inspectionService.getMarketGradeInfo(Collections.singletonList(marketTask1));
+        assertEquals(-10, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(0)).getTotalGrade());
+        assertTrue(gradeInfoMap.get(marketTask1.getInterestedMarkets().get(0)).getGradeTermList().contains(GradeTerm.OVERTIME));
+        assertEquals(10, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(1)).getTotalGrade());
+        assertTrue(gradeInfoMap.get(marketTask1.getInterestedMarkets().get(1)).getGradeTermList().contains(GradeTerm.IN_TIME));
+        assertEquals(-30, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(2)).getTotalGrade());
+        assertTrue(gradeInfoMap.get(marketTask1.getInterestedMarkets().get(2)).getGradeTermList().contains(GradeTerm.OVERTIME));
+        assertTrue(gradeInfoMap.get(marketTask1.getInterestedMarkets().get(2)).getGradeTermList().contains(GradeTerm.LONG_OVERTIME));
+
+        timeService.setCurrentDateLaterByNDays(8);
+        // all not finished, in time
+        gradeInfoMap = inspectionService.getMarketGradeInfo(Collections.singletonList(marketTask2));
+        assertEquals(0, gradeInfoMap.size());
+
+        timeService.setCurrentDateLaterByNDays(12);
+        // all not finished, overtime
+        gradeInfoMap = inspectionService.getMarketGradeInfo(Collections.singletonList(marketTask2));
+        assertEquals(2, gradeInfoMap.size());
+        assertEquals(-10, gradeInfoMap.get(marketTask2.getInterestedMarkets().get(0)).getTotalGrade());
+        assertTrue(gradeInfoMap.get(marketTask2.getInterestedMarkets().get(0)).getGradeTermList().contains(GradeTerm.OVERTIME));
+        assertEquals(-10, gradeInfoMap.get(marketTask2.getInterestedMarkets().get(1)).getTotalGrade());
+        assertTrue(gradeInfoMap.get(marketTask2.getInterestedMarkets().get(1)).getGradeTermList().contains(GradeTerm.OVERTIME));
+
+        // check for inspection task list
+        timeService.setCurrentDateLaterByNDays(16);
+        gradeInfoMap = inspectionService.getMarketGradeInfo(Arrays.asList(marketTask1, marketTask2));
+        assertEquals(3, gradeInfoMap.size());
+        assertEquals(-10, gradeInfoMap.get(markets.get(0)).getTotalGrade());
+        assertEquals(1, gradeInfoMap.get(markets.get(0)).getGradeTermList().size());
+        assertTrue(gradeInfoMap.get(markets.get(0)).getGradeTermList().contains(GradeTerm.OVERTIME));
+        assertEquals(0, gradeInfoMap.get(markets.get(1)).getTotalGrade());
+        assertEquals(2, gradeInfoMap.get(markets.get(1)).getGradeTermList().size());
+        assertTrue(gradeInfoMap.get(markets.get(1)).getGradeTermList().contains(GradeTerm.IN_TIME));
+        assertTrue(gradeInfoMap.get(markets.get(1)).getGradeTermList().contains(GradeTerm.OVERTIME));
+        assertEquals(-20, gradeInfoMap.get(markets.get(2)).getTotalGrade());
+        assertEquals(2, gradeInfoMap.get(markets.get(2)).getGradeTermList().size());
+        assertEquals(GradeTerm.OVERTIME, gradeInfoMap.get(markets.get(2)).getGradeTermList().get(0));
+        assertEquals(GradeTerm.OVERTIME, gradeInfoMap.get(markets.get(2)).getGradeTermList().get(1));
     }
 
     /**
