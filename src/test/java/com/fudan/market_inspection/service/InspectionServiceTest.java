@@ -139,7 +139,7 @@ class InspectionServiceTest {
      * 测试：专家按时完成和未按时完成的抽检的场景，获取评估总得分和评估得/扣分的记录
      */
     @Test
-    void testGetExpertGradeInfo() { // todo
+    void testGetExpertGradeInfo() {
         timeService.setCurrentDateLaterByNDays(30);
 
         // test case 1: check single task1 which is long-overtime
@@ -193,10 +193,13 @@ class InspectionServiceTest {
         // test case 1
         Map<Market, GradeInfo> gradeInfoMap = inspectionService.getMarketGradeInfo(Collections.singletonList(marketTask1));
         assertEquals(-10, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(0)).getTotalGrade());
+        assertEquals(1, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(0)).getGradeTermList().size());
         assertTrue(gradeInfoMap.get(marketTask1.getInterestedMarkets().get(0)).getGradeTermList().contains(GradeTerm.OVERTIME));
         assertEquals(10, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(1)).getTotalGrade());
+        assertEquals(1, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(1)).getGradeTermList().size());
         assertTrue(gradeInfoMap.get(marketTask1.getInterestedMarkets().get(1)).getGradeTermList().contains(GradeTerm.IN_TIME));
         assertEquals(-30, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(2)).getTotalGrade());
+        assertEquals(2, gradeInfoMap.get(marketTask1.getInterestedMarkets().get(2)).getGradeTermList().size());
         assertTrue(gradeInfoMap.get(marketTask1.getInterestedMarkets().get(2)).getGradeTermList().contains(GradeTerm.OVERTIME));
         assertTrue(gradeInfoMap.get(marketTask1.getInterestedMarkets().get(2)).getGradeTermList().contains(GradeTerm.LONG_OVERTIME));
 
@@ -210,8 +213,10 @@ class InspectionServiceTest {
         gradeInfoMap = inspectionService.getMarketGradeInfo(Collections.singletonList(marketTask2)); // not finished, overtime
         assertEquals(2, gradeInfoMap.size());
         assertEquals(-10, gradeInfoMap.get(marketTask2.getInterestedMarkets().get(0)).getTotalGrade());
+        assertEquals(1, gradeInfoMap.get(marketTask2.getInterestedMarkets().get(0)).getGradeTermList().size());
         assertTrue(gradeInfoMap.get(marketTask2.getInterestedMarkets().get(0)).getGradeTermList().contains(GradeTerm.OVERTIME));
         assertEquals(-10, gradeInfoMap.get(marketTask2.getInterestedMarkets().get(1)).getTotalGrade());
+        assertEquals(1, gradeInfoMap.get(marketTask2.getInterestedMarkets().get(1)).getGradeTermList().size());
         assertTrue(gradeInfoMap.get(marketTask2.getInterestedMarkets().get(1)).getGradeTermList().contains(GradeTerm.OVERTIME));
 
         // test case 4: check for inspection task list

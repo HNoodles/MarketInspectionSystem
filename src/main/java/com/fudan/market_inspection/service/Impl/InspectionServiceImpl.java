@@ -25,7 +25,6 @@ public class InspectionServiceImpl implements InspectionService {
 
     @Override
     public Map<Expert, GradeInfo> getExpertGradeInfo(List<ExpertInspectionTask> tasks) {
-//        TODO: duplicated code with MarketGradingVisitor
         Map<Expert, GradeInfo> result = new HashMap<>();
         for (ExpertInspectionTask task : tasks) {
             long delayDays;
