@@ -1,38 +1,45 @@
 package com.fudan.market_inspection;
 
-import com.fudan.market_inspection.entity.Expert;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import com.fudan.market_inspection.dao.AbstractInspectionTask;
+import com.fudan.market_inspection.dao.SelfInspectionTask;
+import com.fudan.market_inspection.entity.Market;
+import com.fudan.market_inspection.entity.Product;
+import com.fudan.market_inspection.service.DataService;
+import com.fudan.market_inspection.service.Impl.DataServiceImpl;
+import com.fudan.market_inspection.service.Impl.InspectionServiceImpl;
+import com.fudan.market_inspection.service.Impl.TaskServiceImpl;
+import com.fudan.market_inspection.service.Impl.TimeServiceImpl;
+import com.fudan.market_inspection.service.InspectionService;
+import com.fudan.market_inspection.service.TaskService;
+import com.fudan.market_inspection.service.TimeService;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-////        Class.forName("com.h2database:h2:1.4.200");
-//        Connection conn = DriverManager.getConnection("jdbc:h2:./data/market_inspection", "sa", "");
-//        Statement stmt = conn.createStatement();
-//        ResultSet rs = stmt.executeQuery("SELECT * FROM EXPERTS");
-//        while (rs.next()) {
-//            System.out.println(rs.getInt("id") + rs.getString("NAME"));
-//        }
-//        conn.close();
-        //获取加载配置管理类
-        Configuration configuration = new Configuration();
-        //不给参数就默认加载hibernate.cfg.xml文件，
-        configuration.configure();
-        //创建Session工厂对象
-        SessionFactory factory = configuration.buildSessionFactory();
-        //得到Session对象
-        Session session = factory.openSession();
-        //使用Hibernate操作数据库，都要开启事务,得到事务对象
-//        Transaction transaction = session.getTransaction();
-//         开启事务
-//        transaction.begin();
-        //把对象添加到数据库中
-        session.save(new Expert("rose"));
-        //提交事务
-//        transaction.commit();
-        //关闭Session
-        session.close();
+    public static void main(String[] args) {
+        // A simple demo to show how to use our system.
+        // More functions can be seen in test cases.
+        DataService dataService = new DataServiceImpl();
+        TimeService timeService = new TimeServiceImpl();
+        TaskService taskService = new TaskServiceImpl(timeService);
+        InspectionService inspectionService = new InspectionServiceImpl(timeService);
+
+        List<Market> markets = dataService.getAllMarkets();
+        List<Product> products = dataService.getAllProducts();
+
+        AbstractInspectionTask task = new SelfInspectionTask(
+                "Market Task",
+                Collections.singletonList(markets.get(0)),
+                Collections.singletonList(products.get(0)),
+                timeService.getCurrentDate()
+        );
+        taskService.addCheckResult(task, markets.get(0), products.get(0), 1);
+        Map<Product, Integer> map = inspectionService.getProductInvalidCount(task);
+        for (Product product : map.keySet()) {
+            System.out.println(product.getName() + " invalid number: " + map.get(product));
+        }
 
     }
 }
