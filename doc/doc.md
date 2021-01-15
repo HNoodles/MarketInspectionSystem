@@ -39,11 +39,19 @@
 
 ## 三、静态模型设计
 
-本次项目的类图设计如下图所示。
+本次项目的静态模型设计大体设计（领域模型）如下图所示。
 
-TODO：图
+![image-20210115182430585](img/image-20210115182430585.png)
 
-TODO：具体描述
+依照该设计，我们将项目的主要逻辑实现为如下结构。
+
+![image-20210115180532908](img/image-20210115180532908.png)
+
+如代码结构部分所陈述的，本项目的主要逻辑通过`service`、`dao`、`entity`三个包完成。
+
+<img src="img/image-20210115181614899.png" alt="image-20210115181614899" style="zoom: 67%;" /><img src="img/image-20210115181846245.png" alt="image-20210115181846245" style="zoom: 50%;" />
+
+我们又将检查任务抽取为`AbstractInspectionTask`类，其两个子类分别作为专家抽检任务和市场自检任务。而一个抽象检查任务又包含了多个对于单一市场的`CheckTask`。由于`AbstractInspectionTask`与`CheckTask`都具有时效性的特征，因此我们又抽取出了`ITask`接口用以定义相关方法。最终该部分的结构如上图所示。
 
 
 
@@ -67,6 +75,8 @@ TODO：具体描述
 
 在设计项目的过程中，我们发现标记完成检查任务和评价市场、专家检查工作及时性的过程中，我们都需要用到当前系统日期信息。同时，又考虑到测试时，我们不能直接使用真实系统时间，而需要对其进行Mock。因此，我们应当使用依赖注入的方式来处理系统时间与业务之间的关系。
 
+![image-20210115181240397](img/image-20210115181240397.png)
+
 具体地，我们通过在`InspectionService`和`TaskService`中注入`TimeService`实现的方式来实现系统时间对业务的依赖注入。当Service中需要评估任务完成及时性或添加检查任务结果时，将通过注入的`TimeService`获得系统当前时间。
 
 而在测试时，我们通过构建Mock的`TimeService`实现类来模拟获取系统当前时间，不同于正常`TimeService`实现中直接通过new Date()的方式获取当前日期，在Mock的`TimeService`实现中，获取当前日期将始终返回一个内部记录的`currentDate`属性，而该属性可以通过特定方法进行手动调整。我们只需要在构造`InspectionService`和`TaskService`时注入Mock的`TimeService`实现，就能实现我们在测试时对系统时间的控制。
@@ -77,13 +87,28 @@ TODO：具体描述
 
 在本项目中，我们识别到需求中的统计不合格产品数、统计市场得分情况和统计未完成检查任务均包含了对某个`AbstractInspectionTask`（专家抽检任务或市场自检任务）下的`CheckTask`（市场具体检查任务）列表的遍历。因此，我们在其中抽象出了Visitor模式，即通过`AbstractInspectionTask`接受一个`AbstractVisitor`对`CheckTask`列表的访问来完成具体业务。
 
+![image-20210115174301344](img/image-20210115174301344.png)
+
 在模式中，`AbstractInspectionTask`类对应`Element`类，`AbstractVisitor`类对应`Visitor`类；`SelfInspectionTask`和`ExpertInspectionTask`对应了`ConcreteElement`，service.visitor包中的实体类对应了`ConcreteVisitor`。
 
-在这里，我们对传统Visitor模式稍稍进行了一些改动。由于传统访问者模式不能很好地支持返回值，更何况我们所用到的实际业务中所需的返回值类型各不相同。因此，我们在各个`ConcreteVisitor`中加入了适合各自业务的`result`字段，并添加了`getResult`方法用以获得该结果。Visitor在visit相应Element的过程中，会对该结果进行更新。
+在这里，我们对传统Visitor模式稍稍进行了一些改动。由于传统访问者模式不能很好地支持返回值，更何况我们所用到的实际业务中所需的返回值类型各不相同。因此，我们在各个`ConcreteVisitor`中加入了适合各自业务的`result`字段，并添加了`getResult`方法用以获得该结果。Visitor在visit相应Element的过程中，会对该结果进行更新。代码举例如下：
+
+```java
+@Override
+public Map<Product, Integer> getProductTotalInvalidCountInRange(List<AbstractInspectionTask> tasks, Date startDate, Date endDate) {
+    CheckInvalidVisitor visitor = new CheckInvalidVisitor(startDate, endDate);
+    for (AbstractInspectionTask task : tasks) {
+        task.accept(visitor);
+    }
+    return visitor.getResult();
+}
+```
 
 #### Decorator
 
 对于给市场和专家评价的部分，我们识别到可以使用装饰器模式来进行评分信息的生成。主要理由在于：对于未按时完成任务的情况，存在评分叠加的情况，即单纯的未按时完成应当扣10分，而超时20天以上未完成还要再扣20分，这样的情况符合装饰器模式对单个对象在基础效果上不断叠加的特性，而和策略模式中对所有对象运用不同类型计算方式的用况不太相同。
+
+![image-20210115172841886](img/image-20210115172841886.png)
 
 在模式中，一个定义了`getGrade`方法的接口作为`Component`，`AbstractInspectionTask`和`CheckTask`作为`ConcreteComponent`，`AbstractDecorator`作为`Decorator`，dao.decorator包中的实体类对应了`ConcreteDecorator`。
 
