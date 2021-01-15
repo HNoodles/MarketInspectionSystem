@@ -1,6 +1,5 @@
 package com.fudan.market_inspection.service;
 
-import com.fudan.market_inspection.dao.CheckResult;
 import com.fudan.market_inspection.dao.CheckTask;
 import com.fudan.market_inspection.dao.ExpertInspectionTask;
 import com.fudan.market_inspection.dao.SelfInspectionTask;
@@ -9,7 +8,6 @@ import com.fudan.market_inspection.entity.Market;
 import com.fudan.market_inspection.entity.Product;
 import com.fudan.market_inspection.service.Impl.DataServiceImpl;
 import com.fudan.market_inspection.service.Impl.TaskServiceImpl;
-import com.fudan.market_inspection.service.Impl.TimeServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,6 +68,7 @@ class TaskServiceTest {
         products = null;
 
         marketTask = null;
+        expertTask = null;
     }
 
     @Test
